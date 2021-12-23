@@ -26,6 +26,12 @@ const addSvg = (response) => {
     addScale(response);
 }
 
+const tooltip = d3.select('#graph-div')
+                  .append('div')
+                  .attr('id', 'tooltip')
+                  .style('position', 'absolute')
+                  .style('opacity', '0')
+
 const addScale = (response) => {
     const specifier = '%M:%S';
     const timeArray = response.map(d => d3.timeParse(specifier)(d.Time))
@@ -70,9 +76,6 @@ const addAxis = (timeArray, yearArray, response) => {
 
 const addScatter = (timeArray, yearArray, response) => {
     const specifier = '%M:%S';
-    const minSpec = '%M'
-
-    // d3.timeParse(specifier)(d.Time)
 
     svg.selectAll('circle')
        .data(response)
@@ -91,7 +94,13 @@ const addScatter = (timeArray, yearArray, response) => {
        .attr('cx', (d, i) => widthScale(d.Year))
        .attr('cy', (d, i) => heightScale(d3.timeParse(specifier)(d.Time)))
        .attr('r', 5)
-       .on('mouseover', (event) => console.log(event.currentTarget.dataset.yvalue));
+       .on('mouseover', (event) => tooltip.style('opacity', '1')
+                                          .attr('data-year', event.currentTarget.dataset.xvalue))
+       .on('mousemove', (event) => tooltip.style('top', event.clientY + 'px')
+                                          .style('left', event.clientX + 'px')
+                                          .text(`Name: ${event.currentTarget.__data__.Name}`)
+                                          .text(`Doping: ${event.currentTarget.__data__.Doping} Nationality: ${event.currentTarget.__data__.Nationality} Place: ${event.currentTarget.__data__.Place} Time: ${event.currentTarget.__data__.Time} Year: ${event.currentTarget.__data__.Year}`))
+       .on('mouseout', () => tooltip.style('opacity', 0));
 
     addLegend();
 }
@@ -131,6 +140,5 @@ const addLegend = () => {
     svg.append('text')
        .attr('x', w - (padding + 200))
        .attr('y', padding + 30)
-       .text(legendItems[1].text)
-
+       .text(legendItems[1].text);
 }
