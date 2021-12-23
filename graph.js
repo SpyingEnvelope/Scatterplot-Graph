@@ -103,9 +103,10 @@ const addLegend = () => {
 
     const legend = d3.select('#legend')
       .append('svg')
-      .attr('width', w)
-      .attr('height', h)
+      .attr('width', 100)
+      .attr('height', 100)
       .style('position', 'absolute')
+      .attr('transform', `translate(${w - padding}, 0)`)
       .selectAll('.legendItem')
       .data(legendItems)
       .enter()
@@ -115,7 +116,7 @@ const addLegend = () => {
       .attr('height', 12)
       .style('fill', d => d.color)
       .attr('transform', (d, i) => {
-          let x = w - padding;
+          let x = 0;
           let y = padding + (i * 20);
           return `translate(${x}, ${y})`
 
