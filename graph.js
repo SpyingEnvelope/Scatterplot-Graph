@@ -1,8 +1,14 @@
-let jsonData;
+// jQuery
+
+$(document).mousemove(function(event) {
+    $('#tooltip').css('left', event.clientX + 'px')
+    $('#tooltip').css('top', event.clientY + 'px')
+});
+
+
 let svg;
 let heightScale;
 let widthScale;
-let yScale;
 let xScale;
 
 const w = 1000;
@@ -12,7 +18,6 @@ const padding = 40;
 fetch('https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/cyclist-data.json')
     .then(response => response.json())
     .then(function (response) {
-        console.log(response)
         addSvg(response);
         
     })
@@ -38,10 +43,6 @@ const addScale = (response) => {
     const timeArray = response.map(d => d3.timeParse(specifier)(d.Time))
     const yearArray = response.map(d => d.Year);
 
-    yScale = d3.scaleBand()
-               .domain(['37:00', '37:15', '37:30', '37:45', '38:00', '38:15', '38:30', '38:45', '39:00', '39:15', '39:30', '39:45'])
-               .range([padding, h - padding]);
-
     xScale = d3.scaleLinear()
                .domain([1993, d3.max(yearArray)])
                .range([padding, w - padding]);
@@ -58,7 +59,6 @@ const addScale = (response) => {
 }
 
 const addAxis = (timeArray, yearArray, response) => {
-    // const yAxis = d3.axisLeft(yScale);
     const yAxis = d3.axisLeft(heightScale);
     const xAxis = d3.axisBottom(xScale);
 
@@ -97,8 +97,7 @@ const addScatter = (timeArray, yearArray, response) => {
        .attr('r', 5)
        .on('mouseover', (event) => tooltip.style('opacity', '1')
                                           .attr('data-year', event.currentTarget.dataset.xvalue))
-       .on('mousemove', (event) => tooltip.style('top', event.clientY + 'px')
-                                          .style('left', event.clientX + 'px')
+       .on('mousemove', (event) => tooltip
                                           .html(`<b>Name:</b> ${event.currentTarget.__data__.Name}` + '<br>' + `<b>Doping:</b> ${event.currentTarget.__data__.Doping}` + "<br>" + `<b>Nationality:</b> ${event.currentTarget.__data__.Nationality}` + "<br>" + `<b>Place:</b> ${event.currentTarget.__data__.Place}` + '<br>' + `<b>Time:</b> ${event.currentTarget.__data__.Time}` + "<br>" + `<b>Year:</b> ${event.currentTarget.__data__.Year}`))
        .on('mouseout', () => tooltip.style('opacity', 0));
 
