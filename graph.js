@@ -51,13 +51,14 @@ const addScale = (response) => {
 }
 
 const addAxis = (timeArray, yearArray, response) => {
-    const yAxis = d3.axisLeft(yScale);
+    // const yAxis = d3.axisLeft(yScale);
+    const yAxis = d3.axisLeft(heightScale);
     const xAxis = d3.axisBottom(xScale);
 
     svg.append('g')
        .attr('id', 'y-axis')
        .attr('transform', 'translate(' + padding + ', 0)')
-       .call(yAxis);
+       .call(yAxis.tickFormat(d => d3.timeFormat('%M:%S')(d)));
     
     svg.append('g')
        .attr('id', 'x-axis')
