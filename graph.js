@@ -121,4 +121,14 @@ const addLegend = () => {
 
       });
 
+    svg.append('text')
+       .attr('x', w - (padding + 200))
+       .attr('y', padding + 10)
+       .text(legendItems[0].text);
+
+    svg.append('text')
+       .attr('x', w - (padding + 200))
+       .attr('y', padding + 30)
+       .text(legendItems[1].text)
+
 }
