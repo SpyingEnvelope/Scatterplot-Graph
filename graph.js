@@ -29,6 +29,7 @@ const addSvg = (response) => {
 const tooltip = d3.select('#graph-div')
                   .append('div')
                   .attr('id', 'tooltip')
+                  .attr('class', 'smallfont')
                   .style('position', 'absolute')
                   .style('opacity', '0')
 
@@ -98,8 +99,7 @@ const addScatter = (timeArray, yearArray, response) => {
                                           .attr('data-year', event.currentTarget.dataset.xvalue))
        .on('mousemove', (event) => tooltip.style('top', event.clientY + 'px')
                                           .style('left', event.clientX + 'px')
-                                          .text(`Name: ${event.currentTarget.__data__.Name}`)
-                                          .text(`Doping: ${event.currentTarget.__data__.Doping} Nationality: ${event.currentTarget.__data__.Nationality} Place: ${event.currentTarget.__data__.Place} Time: ${event.currentTarget.__data__.Time} Year: ${event.currentTarget.__data__.Year}`))
+                                          .html(`<b>Name:</b> ${event.currentTarget.__data__.Name}` + '<br>' + `<b>Doping:</b> ${event.currentTarget.__data__.Doping}` + "<br>" + `<b>Nationality:</b> ${event.currentTarget.__data__.Nationality}` + "<br>" + `<b>Place:</b> ${event.currentTarget.__data__.Place}` + '<br>' + `<b>Time:</b> ${event.currentTarget.__data__.Time}` + "<br>" + `<b>Year:</b> ${event.currentTarget.__data__.Year}`))
        .on('mouseout', () => tooltip.style('opacity', 0));
 
     addLegend();
