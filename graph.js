@@ -69,6 +69,9 @@ const addAxis = (timeArray, yearArray, response) => {
 
 const addScatter = (timeArray, yearArray, response) => {
     const specifier = '%M:%S';
+    const minSpec = '%M'
+
+    // d3.timeParse(specifier)(d.Time)
 
     svg.selectAll('circle')
        .data(response)
@@ -76,7 +79,7 @@ const addScatter = (timeArray, yearArray, response) => {
        .append('circle')
        .attr('class', 'dot')
        .attr('data-xvalue', (d) => d.Year)
-       .attr('data-yvalue', (d) => d3.timeParse(specifier)(d.Time))
+       .attr('data-yvalue', (d) => new Date(d.Year, 0, 0, 0, d.Time.substring(0, 2), d.Time.substring(3, 5)))
        .attr('fill', function(d) {
            if (d.URL == "") {
                return 'orange';
@@ -86,5 +89,36 @@ const addScatter = (timeArray, yearArray, response) => {
        })
        .attr('cx', (d, i) => widthScale(d.Year))
        .attr('cy', (d, i) => heightScale(d3.timeParse(specifier)(d.Time)))
-       .attr('r', 5);
+       .attr('r', 5)
+       .on('mouseover', (event) => console.log(event.currentTarget.dataset.yvalue));
+
+    addLegend();
+}
+
+const addLegend = () => {
+    const legendItems = [
+        {text: 'Without doping allegations', color: 'orange'},
+        {text: 'With doping allegations', color: 'blue'}
+    ]
+
+    const legend = d3.select('#legend')
+      .append('svg')
+      .attr('width', w)
+      .attr('height', h)
+      .style('position', 'absolute')
+      .selectAll('.legendItem')
+      .data(legendItems)
+      .enter()
+      .append('rect')
+      .attr('class', 'legendItem')
+      .attr('width', 12)
+      .attr('height', 12)
+      .style('fill', d => d.color)
+      .attr('transform', (d, i) => {
+          let x = w - padding;
+          let y = padding + (i * 20);
+          return `translate(${x}, ${y})`
+
+      });
+
 }
